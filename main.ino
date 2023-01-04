@@ -18,33 +18,28 @@ void setup(){
 int inc = 0;
 void other_main(){
 	bool beatflag = readPulseSensor();
-	if (beatflag)
-		inc++;	
-
-	if (inc >= 4){
+	if (beatflag){
 		pulseSensorDelay.start(1e4);
-		inc = 0;
 	}
 
 	if( pulseSensorDelay.justFinished() ){
-		if ( inc < 5 ){
+		if (!beatflag){
 			main_fn(15,30);			// 30 (second arg) times compression within 15(first arg) seconds
 		}
 	}
 }
 
 void main_fn( int total_time, int total_compression ){
-  
-	
+  int press_delay = 70;	
   int delay_time = total_time * 1000/ total_compression ;    // in ms delay time b/w squeeze
-  delay_time -= 30;
+  delay_time -= press_delay;
   int compression_highAngle = 180;
   int compression_lowAngle = 0;
   
   //  compression 
   for (int  i = 0 ; i < total_compression ; ++i){
     compServo.write(compression_lowAngle);
-    delay(30);
+    delay(press_delay);
     compServo.write(compression_highAngle);
     delay(delay_time);
     //delay(delay_time);
@@ -70,18 +65,17 @@ int pulseSensorPin = A0; 			// pulse sensor Pin
 bool readPulseSensor(){
 	int threshold = 520;
 	millisDelay pulseInterval;
-	do{
-		pulseInterval.start(1000);
-	}while(0);
-
-	if (analogRead(pulseSensorPin) > threshold){
-		digitalWrite(LED_PIN,HIGH);
-		delay(100);
-		digitalWrite(LED_PIN,LOW);
-		return true;
-	}
-	if ( pulseInterval.justFinished() ){
-		return false;	
+	pulseInterval.start(1000);
+	while(1){
+		if (analogRead(pulseSensorPin) > threshold){
+			digitalWrite(LED_PIN,HIGH);
+			delay(100);
+			digitalWrite(LED_PIN,LOW);
+			return true;
+		}
+		if ( pulseInterval.justFinished() ){
+			return false;	
+		}
 	}
 }
 
