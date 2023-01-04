@@ -1,6 +1,6 @@
 #include <Servo.h>
-#include <millisDelay>
-#include <PulseSensorPlayground.h> 
+#include <millisDelay.h>
+/* #include <PulseSensorPlayground.h> */ 
 const int PulseWire = 0;  
 millisDelay pulseSensorDelay;
 
@@ -63,13 +63,17 @@ void main_fn( int total_time, int total_compression ){
 int pulseSensorPin = A0; 			// pulse sensor Pin
 bool readPulseSensor(){
 	int threshold = 700;
+	millisDelay pulseInterval;
+	do{
+		pulseInterval.start(1000);
+	}while(0);
+
 	if (analogRead(pulseSensorPin) > threshold){
 		digitalWrite(LED_PIN,HIGH);
 		delay(100);
 		digitalWrite(LED_PIN,LOW);
 		return true;
 	}
-	millisDelay pulseInterval(1000);
 	if ( pulseInterval.justFinished() ){
 		return false;	
 	}
