@@ -15,7 +15,7 @@ void setup(){
 	pinMode(LED_PIN,OUTPUT);
 }
 
-void loop(){
+void other_main(){
 	bool beatflag = readPulseSensor();
 	if (beatflag)
 		pulseSensorDelay.start(1e4);
@@ -77,4 +77,10 @@ bool readPulseSensor(){
 	if ( pulseInterval.justFinished() ){
 		return false;	
 	}
+}
+
+void loop(){
+	/* other_main(); */
+	Serial.println(analogRead(A0));
+	delay(500);
 }
