@@ -15,14 +15,19 @@ void setup(){
 	respServo.attach(respServoPin);
 	pinMode(LED_PIN,OUTPUT);
 }
-
+int inc = 0;
 void other_main(){
 	bool beatflag = readPulseSensor();
 	if (beatflag)
+		inc++;	
+
+	if (inc >= 4){
 		pulseSensorDelay.start(1e4);
+		inc = 0;
+	}
 
 	if( pulseSensorDelay.justFinished() ){
-		if (!beatflag){
+		if ( inc < 5 ){
 			main_fn(15,30);			// 30 (second arg) times compression within 15(first arg) seconds
 		}
 	}
@@ -63,7 +68,7 @@ void main_fn( int total_time, int total_compression ){
 
 int pulseSensorPin = A0; 			// pulse sensor Pin
 bool readPulseSensor(){
-	int threshold = 700;
+	int threshold = 520;
 	millisDelay pulseInterval;
 	do{
 		pulseInterval.start(1000);
