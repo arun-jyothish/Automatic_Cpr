@@ -1,7 +1,5 @@
 #include <Servo.h>
 #include <millisDelay.h>
-/* #include <PulseSensorPlayground.h> */ 
-const int PulseWire = 0;  
 millisDelay pulseSensorDelay;
 
 int compServoPin = 6, respServoPin = 5;
@@ -15,10 +13,15 @@ void setup(){
 	respServo.attach(respServoPin);
 	pinMode(LED_PIN,OUTPUT);
 }
-int inc = 0;
+
+bool prevCompOn = false;
 void other_main(){
 	bool beatflag = readPulseSensor();
+	if ( prevCompOn && !beatflag ){
+		main_fn(15,30);
+	}
 	if (beatflag){
+		prevCompOn = false;
 		pulseSensorDelay.start(1e4);
 	}
 
@@ -30,6 +33,7 @@ void other_main(){
 }
 
 void main_fn( int total_time, int total_compression ){
+	prevCompOn = true;
   int press_delay = 70;	
   int delay_time = total_time * 1000/ total_compression ;    // in ms delay time b/w squeeze
   delay_time -= press_delay;
@@ -80,7 +84,6 @@ bool readPulseSensor(){
 }
 
 void loop(){
-	/* other_main(); */
-	Serial.println(analogRead(A0));
-	delay(500);
+	other_main();
+	/* Serial.println(analogRead(A0)); */
 }
