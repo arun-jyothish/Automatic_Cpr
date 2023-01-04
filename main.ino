@@ -10,6 +10,7 @@ Servo respServo;
 
 int LED_PIN = 13;
 void setup(){
+	Serial.begin(9600);
 	compServo.attach(compServoPin);
 	respServo.attach(respServoPin);
 	pinMode(LED_PIN,OUTPUT);
